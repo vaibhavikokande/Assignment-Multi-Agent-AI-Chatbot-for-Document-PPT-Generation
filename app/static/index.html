@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artifact Studio | Multi-Agent POC</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">MULTI-AGENT ARTIFACT STUDIO</p>
+      <h1>Research-led documents, on brand.</h1>
+      <p class="muted">Upload a proposal and a presentation template, then ask the supervisor to create editable artifacts.</p>
+    </div>
+    <div class="status-pill"><span class="status-dot"></span><span id="health">Checking local service…</span></div>
+  </header>
+  <main class="shell">
+    <section class="hero-grid">
+      <div class="card upload-card">
+        <div class="section-kicker">01 / TEMPLATE INPUT</div>
+        <h2>Bring your working style</h2>
+        <p class="muted">DOCX, PDF, PPT/PPTX, and images are analyzed for structure, typography, layout, and content patterns.</p>
+        <label class="dropzone" id="dropzone">
+          <input id="file-input" type="file" multiple accept=".docx,.pdf,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.tif,.tiff">
+          <span class="upload-icon">＋</span>
+          <strong>Drop templates here</strong>
+          <span class="muted">or click to browse</span>
+        </label>
+        <div id="upload-list" class="stack"></div>
+      </div>
+      <div class="card request-card">
+        <div class="section-kicker">02 / SUPERVISOR REQUEST</div>
+        <h2>What should the team create?</h2>
+        <textarea id="message" rows="7">Research the latest Generative AI trends and create a proposal and 12-slide presentation using the same tone and style as the uploaded files.</textarea>
+        <div class="quick-actions">
+          <button class="chip" data-prompt="Add an executive summary.">+ Executive summary</button>
+          <button class="chip" data-prompt="Make the presentation more concise.">Make concise</button>
+          <button class="chip" data-prompt="Add a competitive analysis section.">Competitive analysis</button>
+        </div>
+        <button id="run-button" class="primary">Run supervisor workflow <span>→</span></button>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <div class="card trace-card">
+        <div class="section-kicker">03 / ORCHESTRATION TRACE</div>
+        <div class="trace-header"><h2>Agent activity</h2><span id="run-status" class="badge">Waiting</span></div>
+        <div id="trace" class="trace empty-state">Run a request to see the supervisor delegate work across specialized agents.</div>
+        <div id="sources" class="sources"></div>
+      </div>
+      <div class="card artifact-card">
+        <div class="section-kicker">04 / ARTIFACTS</div>
+        <div class="trace-header"><h2>Editable outputs</h2><button id="refresh-button" class="text-button">Refresh</button></div>
+        <div id="artifacts" class="artifacts empty-state">Generated files will appear here.</div>
+      </div>
+    </section>
+
+    <section class="card edit-card">
+      <div class="section-kicker">05 / CONVERSATIONAL EDITING</div>
+      <div class="edit-row">
+        <div><h2>Keep iterating</h2><p class="muted">Choose an artifact, ask for a change, and the POC will create a new downloadable version.</p></div>
+        <select id="artifact-select"><option value="">Select an artifact</option></select>
+        <input id="edit-input" placeholder="e.g. Update the report using the latest web information.">
+        <button id="edit-button" class="secondary">Create version</button>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
