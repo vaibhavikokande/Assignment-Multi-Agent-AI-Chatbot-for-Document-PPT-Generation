@@ -16,6 +16,13 @@ from samples.create_samples import create_sample_docx, create_sample_pptx
 
 ROOT = Path(__file__).parents[1]
 
+# A full supervisor run generates, validates, and re-parses both artifacts. On a
+# cold or loaded machine that lands close to 15s, which made these assertions fail
+# on timing rather than behaviour. The limits below only need to be generous enough
+# to keep the test measuring correctness.
+STARTUP_TIMEOUT_SECONDS = 60
+REQUEST_TIMEOUT_SECONDS = 120
+
 
 def _free_port() -> int:
     with socket.socket() as sock:
@@ -51,7 +58,7 @@ class APIEndToEndTests(unittest.TestCase):
             "LLM_PROVIDER": "deterministic",
         })
         cls.process = subprocess.Popen([sys.executable, "-m", "app.main"], cwd=ROOT, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        deadline = time.time() + 15
+        deadline = time.time() + STARTUP_TIMEOUT_SECONDS
         while time.time() < deadline:
             try:
                 status, _headers, _body = cls.request("GET", "/api/health")
@@ -73,7 +80,7 @@ class APIEndToEndTests(unittest.TestCase):
 
     @classmethod
     def request(cls, method: str, path: str, body: bytes | None = None, headers: dict[str, str] | None = None) -> tuple[int, dict[str, str], bytes]:
-        connection = HTTPConnection("127.0.0.1", cls.port, timeout=15)
+        connection = HTTPConnection("127.0.0.1", cls.port, timeout=REQUEST_TIMEOUT_SECONDS)
         connection.request(method, path, body=body, headers=headers or {})
         response = connection.getresponse()
         result = (response.status, {key: value for key, value in response.getheaders()}, response.read())
