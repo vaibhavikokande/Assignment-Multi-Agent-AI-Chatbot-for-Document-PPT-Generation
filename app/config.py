@@ -84,7 +84,8 @@ def get_settings() -> Settings:
     storage_value = os.getenv("APP_STORAGE_DIR")
     storage_dir = Path(storage_value).expanduser() if storage_value else ROOT_DIR / "storage"
     host = os.getenv("APP_HOST", "127.0.0.1")
-    port = int(os.getenv("APP_PORT", "8000"))
+    # Managed hosts (Render, Heroku, Cloud Run) inject the bound port as PORT.
+    port = int(os.getenv("APP_PORT") or os.getenv("PORT") or "8000")
     configured_origins = tuple(item.strip() for item in os.getenv("ALLOWED_ORIGINS", "").split(",") if item.strip())
     enterprise_kb_value = os.getenv("ENTERPRISE_KB_DIR")
     enterprise_kb_dir = Path(enterprise_kb_value).expanduser() if enterprise_kb_value else ROOT_DIR / "samples" / "input"

@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: artifact-studio
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m app.main
+    envVars:
+      # Render routes external traffic to the port it injects as PORT, so the
+      # server has to listen on every interface rather than loopback.
+      - key: APP_HOST
+        value: 0.0.0.0
+      # Keep the deployed demo credential-free; both providers fall back
+      # deterministically and label the reason in the run metadata.
+      - key: WEB_SEARCH_ENABLED
+        value: "false"
+      - key: LLM_PROVIDER
+        value: deterministic
